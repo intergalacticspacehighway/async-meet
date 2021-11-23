@@ -57,6 +57,7 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [peopleForMeeting, setPeopleForMeeting] = useState([]);
   const [overlappingSlots, setOverlappingSlots] = useState(null);
+  const [slotsNotFound, setSlotsNotFound] = useState(false);
 
   const setName = (id, name) => {
     dispatch({ payload: { id, name }, type: "setName" });
@@ -97,6 +98,11 @@ function App() {
 
       const timings = getOverlap({ availabilities, people: peopleForMeeting });
       setOverlappingSlots(timings);
+      if (!timings) {
+        setSlotsNotFound(true);
+      } else {
+        setSlotsNotFound(false);
+      }
     }
     return () => {
       setOverlappingSlots(null);
@@ -216,6 +222,9 @@ function App() {
           is {overlappingSlots.slotStart} to {overlappingSlots.slotEnd}
         </div>
       ) : null}
+      {slotsNotFound ? (
+        <div>Your frens need to make some adjustments!</div>
+      ) : null}
     </div>
   );
 }
@@ -259,7 +268,8 @@ function getOverlap({ availabilities, people }) {
 
   if (
     slotStart >= availabilityOfPerson.hours.start &&
-    slotEnd <= availabilityOfPerson.hours.end
+    slotEnd <= availabilityOfPerson.hours.end &&
+    slotEnd >= slotStart
   ) {
     console.log("overlapping times ", slotStart, slotEnd);
     return { slotStart, slotEnd };
