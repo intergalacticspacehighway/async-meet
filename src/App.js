@@ -48,7 +48,7 @@ const updateLocalStore = (state) => {
   localStorage.setItem("store", JSON.stringify(state));
 };
 const retrieveLocalStore = () => {
-  return JSON.parse(localStorage.getItem("store") || []);
+  return JSON.parse(localStorage.getItem("store")) || [];
 };
 
 const initialState = retrieveLocalStore();
